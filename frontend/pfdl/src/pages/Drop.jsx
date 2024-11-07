@@ -1,10 +1,13 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import SmokeDetectorIcon from '../assets/smoke-detector-svgrepo-com.svg';
+import LoadingAnimation from '../assets/Blocks@1x-1.0s-200px-200px.svg';
 
 const Drop = () => {
     const [videoFile, setVideoFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     const handleDrop = (event) => {
         event.preventDefault();
@@ -26,9 +29,14 @@ const Drop = () => {
 
     const handleUpload = async () => {
         if (videoFile) {
+            setIsUploading(true);
             // Aquí puedes añadir lógica para comprimir el video antes de enviarlo
             console.log('Enviando el video al servidor:', videoFile);
             // Simular el envío del video por medio de una API
+            setTimeout(() => {
+                setIsUploading(false);
+                alert('Video subido con éxito');
+            }, 3000); // Simulación de espera de 3 segundos
         }
     };
 
@@ -44,7 +52,11 @@ const Drop = () => {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
             >
-                {videoFile ? (
+                {isUploading ? (
+                    <div className="flex justify-center items-center">
+                        <img src={LoadingAnimation} alt="Loading..." className="w-20 h-20" />
+                    </div>
+                ) : videoFile ? (
                     <div className="text-center">
                         <p className="text-lg font-semibold mb-4">Archivo: {videoFile.name}</p>
                         <button
