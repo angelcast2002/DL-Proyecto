@@ -5,6 +5,8 @@ from vid import extract_frames
 import os
 import cv2
 import numpy as np
+import shutil
+
 
 def getImages(directorio, size=(256,256)):
     ## pasar las imagenes a np.array
@@ -24,7 +26,11 @@ def predictImages(modelo, datos, result_path, input_path):
     # Verifica si el directorio existe, si no, lo crea
     if not os.path.exists(result_path):
         os.makedirs(result_path)
-    print(predicciones)
+
+    #borrar todo el contenido de la carpeta de resultados
+    for filename in os.listdir(result_path):
+        os.remove(os.path.join(result_path, filename))
+
     #si la predicción es fumador, guardar el frame en una carpeta
     for i in range(len(predicciones)):
         if predicciones[i][0] > 0.5:
@@ -33,8 +39,10 @@ def predictImages(modelo, datos, result_path, input_path):
                 filename = 'frame' + '0'*(4-len(str(i))) + str(i) + '.jpg'
             else:
                 filename = 'frame' + str(i) + '.jpg'
-            img = os.path.join(input_path, filename)
-            cv2.imwrite(os.path.join(result_path, filename), cv2.imread(img))
+
+            # Ruta completa del archivo en la carpeta input
+            input_file = os.path.join(input_path, filename)
+            shutil.copy(filename, input_file)
     print("Se han encontrado ", cont, " fotogramas de fumador")
     return predicciones
 
@@ -43,7 +51,7 @@ modelo = tf.keras.models.load_model('v1.keras')
 
 video_path = 'videofumando.mp4'
 output_path = ''
-result_path = './result'
+result_path = './datavid/result'
 
 
 
