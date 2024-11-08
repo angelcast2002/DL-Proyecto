@@ -33,23 +33,23 @@ def predictImages(modelo, datos, result_path, input_path):
 
     #si la predicción es fumador, guardar el frame en una carpeta
     for i in range(len(predicciones)):
-        if predicciones[i][0] > 0.5:
+        if predicciones[i][0] > 0.8:
             cont += 1
             if len(str(i)) != 4:
-                filename = 'frame' + '0'*(4-len(str(i))) + str(i) + '.jpg'
+                filename = 'frame_' + '0'*(4-len(str(i))) + str(i) + '.jpg'
             else:
-                filename = 'frame' + str(i) + '.jpg'
+                filename = 'frame_' + str(i) + '.jpg'
 
             # Ruta completa del archivo en la carpeta input
             input_file = os.path.join(input_path, filename)
-            shutil.copy(filename, input_file)
+            shutil.copy(input_file, result_path)
     print("Se han encontrado ", cont, " fotogramas de fumador")
     return predicciones
 
 # Cargar el modelo
 modelo = tf.keras.models.load_model('v1.keras')
 
-video_path = 'videofumando.mp4'
+video_path = 'fumo.mp4'
 output_path = ''
 result_path = './datavid/result'
 
