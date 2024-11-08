@@ -34,7 +34,7 @@ def predictImages(modelo, datos, result_path, input_path):
             else:
                 filename = 'frame' + str(i) + '.jpg'
             img = os.path.join(input_path, filename)
-            cv2.imwrite(os.path.join(result_path, filename, img))
+            cv2.imwrite(os.path.join(result_path, filename), cv2.imread(img))
     print("Se han encontrado ", cont, " fotogramas de fumador")
     return predicciones
 
