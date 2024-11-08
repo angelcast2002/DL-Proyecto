@@ -4,8 +4,8 @@ import shutil
 
 def extract_frames(video, output_folder):
 
-    input_path = f"/datavid/input/{video}"
-    out_path = f"/datavid/output/{output_folder}"
+    input_path = f"./datavid/input/{video}"
+    out_path = f"./datavid/output{output_folder}"
 
     # Borrar el contenido de la carpeta de salida si existe
     if os.path.exists(out_path):
@@ -20,6 +20,9 @@ def extract_frames(video, output_folder):
         .run()
     )
 
-    print("Extracción de fotogramas completada con aceleración GPU del video ", video_path) 
+    print("Extracción de fotogramas completada con aceleración GPU del video ", video) 
     return out_path
+
+# prueba
+extract_frames("videofumando.mp4", "")
 
