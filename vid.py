@@ -21,7 +21,7 @@ def extract_frames(video, output_folder):
         .run()
     )
 
-    print("Extracción de fotogramas completada con aceleración GPU del video ", video) 
+    #print("Extracción de fotogramas completada con aceleración GPU del video ", video) 
     return out_path
 
 # prueba

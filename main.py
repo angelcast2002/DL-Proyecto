@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 from vid import extract_frames
 import os
@@ -6,26 +7,29 @@ import cv2
 import numpy as np
 
 def getImages(directorio, size=(256,256)):
-    datos = []
+    ## pasar las imagenes a np.array
+    imagenes = []
     etiquetas = []
-    for etiqueta, clase in enumerate(["fumador", "noFumador"]):
-        pathClass = os.path.join(directorio, clase)
-        for img in os.listdir(pathClass):
-            imgPath = os.path.join(pathClass, img)
-            imagen = cv2.imread(imgPath)
-            if imagen is not None: 
-                imagen = cv2.resize(imagen, size)
-                datos.append(imagen)
-                etiquetas.append(etiqueta)
-    return (np.array(datos), np.array(etiquetas))
+    for filename in os.listdir(directorio):
+        img = cv2.imread(os.path.join(directorio, filename))
+        img = cv2.resize(img, size)
+        imagenes.append(img)
+        etiquetas.append(0)
+    return np.array(imagenes), np.array(etiquetas)
 
 #funcion para cargar las fotos al modelo y que las clasifique en fumador o no fumador
 def predictImages(modelo, datos, result_path):
     predicciones = modelo.predict(datos)
+    cont = 0
+    # Verifica si el directorio existe, si no, lo crea
+    if not os.path.exists(result_path):
+        os.makedirs(result_path)
     #si la predicción es fumador, guardar el frame en una carpeta
     for i in range(len(predicciones)):
-        if predicciones[i] > 0.5:
-            cv2.imwrite(result_path + '/frame'+str(i)+'.jpg', datos[i])
+        if predicciones[0][0] > 0.5:
+            cont += 1
+            cv2.imwrite(os.path.join(result_path, 'frame'+str(i)+'.jpg'), datos[i])
+    print("Se han encontrado ", cont, " fotogramas de fumador")
     return predicciones
 
 # Cargar el modelo
@@ -40,14 +44,22 @@ result_path = './result'
 # extraer frames del video
 frames_path = extract_frames(video_path, output_path)
 
+
+print("Extracción de fotogramas completada con aceleración GPU del video ", frames_path)
+
 # Cargar los datos
 datos, etiquetas = getImages(frames_path)
+
+print("Datos cargados")
 
 # Normalizar los datos
 datos = datos / 255.0
 
+print("Prediciendo las imagenes...")
 # Predecir las imagenes
-predicciones = predictImages(modelo, datos)
+predicciones = predictImages(modelo, datos, result_path)
+
+print("Predicciones completadas")
 
 
 
