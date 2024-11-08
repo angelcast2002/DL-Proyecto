@@ -18,17 +18,23 @@ def getImages(directorio, size=(256,256)):
     return np.array(imagenes), np.array(etiquetas)
 
 #funcion para cargar las fotos al modelo y que las clasifique en fumador o no fumador
-def predictImages(modelo, datos, result_path):
+def predictImages(modelo, datos, result_path, input_path):
     predicciones = modelo.predict(datos)
     cont = 0
     # Verifica si el directorio existe, si no, lo crea
     if not os.path.exists(result_path):
         os.makedirs(result_path)
+    print(predicciones)
     #si la predicción es fumador, guardar el frame en una carpeta
     for i in range(len(predicciones)):
-        if predicciones[0][0] > 0.5:
+        if predicciones[i][0] > 0.5:
             cont += 1
-            cv2.imwrite(os.path.join(result_path, 'frame'+str(i)+'.jpg'), datos[i])
+            if len(str(i)) != 4:
+                filename = 'frame' + '0'*(4-len(str(i))) + str(i) + '.jpg'
+            else:
+                filename = 'frame' + str(i) + '.jpg'
+            img = os.path.join(input_path, filename)
+            cv2.imwrite(os.path.join(result_path, filename, img))
     print("Se han encontrado ", cont, " fotogramas de fumador")
     return predicciones
 
@@ -57,7 +63,7 @@ datos = datos / 255.0
 
 print("Prediciendo las imagenes...")
 # Predecir las imagenes
-predicciones = predictImages(modelo, datos, result_path)
+predicciones = predictImages(modelo, datos, result_path, frames_path)
 
 print("Predicciones completadas")
 
