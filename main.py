@@ -1,9 +1,5 @@
-
-#importar el modelo ya entrenado 
 import tensorflow as tf
 import numpy as np
-import pandas as pd
-#import vid as vid
 from vid import extract_frames
 import os
 import cv2
@@ -32,13 +28,14 @@ def predictImages(modelo, datos, result_path):
             cv2.imwrite(result_path + '/frame'+str(i)+'.jpg', datos[i])
     return predicciones
 
+# Cargar el modelo
+modelo = tf.keras.models.load_model('v1.keras')
 
 video_path = 'videofumando.mp4'
 output_path = ''
-result_path = 'result'
+result_path = './result'
 
-# Cargar el modelo
-modelo = tf.keras.models.load_model('v1.keras')
+
 
 # extraer frames del video
 frames_path = extract_frames(video_path, output_path)
