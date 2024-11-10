@@ -116,6 +116,11 @@ def reset_ui():
     message_label.config(text="")
     btn_procesar.config(state="normal")
 
+# Selector de tema
+def cambiar_tema(event):
+    selected_theme = theme_selector.get()  # Obtener el tema seleccionado
+    style.theme_use(selected_theme)  # Aplicar el tema seleccionado
+
 # Crear ventana con ttkbootstrap
 ventana = ttk.Window(themename="darkly")
 ventana.title("Detector de Fumadores en Video")
@@ -133,7 +138,7 @@ titulo_label = ttk.Label(ventana, text="Sube un video para detectar fumadores", 
 titulo_label.pack(pady=10)
 
 # Botón para seleccionar el video
-btn_procesar = ttk.Button(ventana, text="Seleccionar y procesar video", bootstyle=SUCCESS, command=iniciar_procesamiento)
+btn_procesar = ttk.Button(ventana, text="Seleccionar y procesar video", bootstyle=PRIMARY, command=iniciar_procesamiento)
 btn_procesar.pack(pady=10)
 
 # Label para mostrar mensajes de estado
@@ -143,5 +148,23 @@ message_label.pack(pady=5)
 # Barra de progreso (oculta al inicio)
 progress = ttk.Progressbar(ventana, orient="horizontal", length=300, mode="determinate", bootstyle="info-striped")
 progress.pack_forget()  # Ocultar la barra de progreso al inicio
+
+# instantiate the style with default theme
+style = ttk.Style()
+
+lista_temas = []
+# check all available themes
+for theme in style.theme_names():
+    lista_temas.append(theme)
+
+# Label para mostrar mensajes de estado
+theme_label = ttk.Label(ventana, text="Selecciona un tema", font=("Arial", 10))
+theme_label.pack(pady=5)
+
+# Crear el combobox para seleccionar el tema
+theme_selector = ttk.Combobox(ventana, values=lista_temas, state="readonly")
+theme_selector.set("darkly")  # Establecer un tema por defecto
+theme_selector.bind("<<ComboboxSelected>>", cambiar_tema)
+theme_selector.pack(pady=10)
 
 ventana.mainloop()
