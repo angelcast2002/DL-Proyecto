@@ -107,6 +107,9 @@ def procesar_video():
 def iniciar_procesamiento():
     # Muestra la barra de progreso al iniciar el procesamiento
     progress.pack(pady=10)
+    message_label.pack(pady=5)
+    btn_procesar.config(state="disabled")  # Deshabilita el botón mientras se procesa el video
+
     # Ejecuta `procesar_video` en un hilo separado
     thread = threading.Thread(target=procesar_video)
     thread.start()
@@ -115,6 +118,7 @@ def reset_ui():
     progress["value"] = 0
     message_label.config(text="")
     btn_procesar.config(state="normal")
+    #progress.pack_forget()  # Ocultar la barra de progreso al finalizar el procesamiento
 
 # Selector de tema
 def cambiar_tema(event):
@@ -123,31 +127,21 @@ def cambiar_tema(event):
 
 # Crear ventana con ttkbootstrap
 ventana = ttk.Window(themename="darkly")
-ventana.title("Detector de Fumadores en Video")
-ventana.geometry("400x400")
+ventana.title("Smoke Alarm")
+ventana.geometry("400x500")
+
+# Nombre de la aplicación
+app_name = ttk.Label(ventana, text="Smoke Alarm", font=("Arial", 20))
+app_name.pack(pady=5)
 
 # Cargar el logo
-#logo_image = Image.open("logo.png")
-#logo_image = logo_image.resize((100, 100))
-#logo_photo = ImageTk.PhotoImage(logo_image)
-#logo_label = ttk.Label(ventana, image=logo_photo)
-#logo_label.pack(pady=10)
+logo_image = Image.open("logo.png")
+logo_image = logo_image.resize((150, 150))
+logo_photo = ImageTk.PhotoImage(logo_image)
+logo_label = ttk.Label(ventana, image=logo_photo)
+logo_label.pack(pady=10)
 
-# Título
-titulo_label = ttk.Label(ventana, text="Sube un video para detectar fumadores", font=("Arial", 16))
-titulo_label.pack(pady=10)
 
-# Botón para seleccionar el video
-btn_procesar = ttk.Button(ventana, text="Seleccionar y procesar video", bootstyle=PRIMARY, command=iniciar_procesamiento)
-btn_procesar.pack(pady=10)
-
-# Label para mostrar mensajes de estado
-message_label = ttk.Label(ventana, text="", font=("Arial", 10))
-message_label.pack(pady=5)
-
-# Barra de progreso (oculta al inicio)
-progress = ttk.Progressbar(ventana, orient="horizontal", length=300, mode="determinate", bootstyle="info-striped")
-progress.pack_forget()  # Ocultar la barra de progreso al inicio
 
 # instantiate the style with default theme
 style = ttk.Style()
@@ -166,5 +160,23 @@ theme_selector = ttk.Combobox(ventana, values=lista_temas, state="readonly")
 theme_selector.set("darkly")  # Establecer un tema por defecto
 theme_selector.bind("<<ComboboxSelected>>", cambiar_tema)
 theme_selector.pack(pady=10)
+
+# Título
+titulo_label = ttk.Label(ventana, text="Sube un video para detectar fumadores", font=("Arial", 16))
+titulo_label.pack(pady=10)
+
+# Botón para seleccionar el video
+btn_procesar = ttk.Button(ventana, text="Seleccionar y procesar video", bootstyle=PRIMARY, command=iniciar_procesamiento)
+btn_procesar.pack(pady=10)
+
+# Label para mostrar mensajes de estado
+message_label = ttk.Label(ventana, text="", font=("Arial", 10))
+message_label.pack(pady=5)
+
+# Barra de progreso (oculta al inicio)
+progress = ttk.Progressbar(ventana, orient="horizontal", length=300, mode="determinate", bootstyle="info-striped")
+progress.pack_forget()  # Ocultar la barra de progreso al inicio
+
+
 
 ventana.mainloop()
