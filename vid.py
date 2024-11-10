@@ -4,7 +4,7 @@ import shutil
 
 def extract_frames(video, output_folder):
 
-    input_path = f"./datavid/input/{video}"
+    input_path = video
     
     out_path = f"./datavid/output/{output_folder}"
 
@@ -16,7 +16,8 @@ def extract_frames(video, output_folder):
     # Usar ffmpeg para extraer fotogramas con soporte de GPU
     (
         ffmpeg
-        .input(input_path)
+        #.input(input_path) Aceleracion con CUDA
+        .input(input_path, hwaccel='cuda')
         .output(os.path.join(out_path, 'frame_%04d.jpg'), start_number=0)
         .run()
     )
