@@ -12,6 +12,8 @@ from tkinter.ttk import Progressbar
 from zipfile import ZipFile
 from PIL import Image, ImageTk
 import time
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 def getImages(directorio, size=(256, 256)):
     imagenes = []
@@ -114,35 +116,32 @@ def reset_ui():
     message_label.config(text="")
     btn_procesar.config(state="normal")
 
-# Configuración de la interfaz gráfica
-ventana = tk.Tk()
+# Crear ventana con ttkbootstrap
+ventana = ttk.Window(themename="darkly")
 ventana.title("Detector de Fumadores en Video")
 ventana.geometry("400x400")
 
-# Cargar y mostrar el logo
+# Cargar el logo
 #logo_image = Image.open("logo.png")
 #logo_image = logo_image.resize((100, 100))
 #logo_photo = ImageTk.PhotoImage(logo_image)
-#logo_label = tk.Label(ventana, image=logo_photo)
+#logo_label = ttk.Label(ventana, image=logo_photo)
 #logo_label.pack(pady=10)
 
 # Título
-titulo_label = tk.Label(ventana, text="Sube un video para detectar fumadores", font=("Arial", 16))
+titulo_label = ttk.Label(ventana, text="Sube un video para detectar fumadores", font=("Arial", 16))
 titulo_label.pack(pady=10)
 
-# Botón de selección de video
-btn_procesar = tk.Button(ventana, text="Seleccionar y procesar video", command=iniciar_procesamiento)
+# Botón para seleccionar el video
+btn_procesar = ttk.Button(ventana, text="Seleccionar y procesar video", bootstyle=SUCCESS, command=iniciar_procesamiento)
 btn_procesar.pack(pady=10)
 
-# Label para mensajes de progreso
-message_label = tk.Label(ventana, text="", font=("Arial", 10))
+# Label para mostrar mensajes de estado
+message_label = ttk.Label(ventana, text="", font=("Arial", 10))
 message_label.pack(pady=5)
 
-# Barra de progreso
-progress = Progressbar(ventana, orient="horizontal", length=300, mode="determinate")
-#progress.pack(pady=10)
-progress.pack_forget()  # Ocultar barra de progreso al inicio
-
-
+# Barra de progreso (oculta al inicio)
+progress = ttk.Progressbar(ventana, orient="horizontal", length=300, mode="determinate", bootstyle="info-striped")
+progress.pack_forget()  # Ocultar la barra de progreso al inicio
 
 ventana.mainloop()
